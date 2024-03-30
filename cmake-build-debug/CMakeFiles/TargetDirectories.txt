@@ -1,0 +1,3 @@
+C:/Users/grons/Desktop/Studia/4 sem/Aizo/Projekt_Aizo/cmake-build-debug/CMakeFiles/Projekt_Aizo.dir
+C:/Users/grons/Desktop/Studia/4 sem/Aizo/Projekt_Aizo/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/grons/Desktop/Studia/4 sem/Aizo/Projekt_Aizo/cmake-build-debug/CMakeFiles/rebuild_cache.dir
