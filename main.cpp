@@ -3,41 +3,15 @@
 #include "quickSort.h"
 #include "insertionSort.h"
 #include "heapSort.h"
+#include "Menu.h"
 
 using namespace std;
 
-void menu(){
-    setlocale(LC_CTYPE, "Polish");
-    while (true){
-        int choice;
-        cout << "Menu:"<<endl;
-        cout<<"1. Wczytanie tablicy z pliku"<<endl;
-        cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartości"<<endl;
-        cout<<"3. Wyświetlenie ostatnio utworzonej tablicy na ekranie"<<endl;
-        cout<<"4. Uruchomienie wybranego algorytmu na ostatnio utworzonej tablicy"<<endl;
-        cout<<"5. Wyświetlenie posortowanej tablicy na ekranie "<<endl;
-        cin >> choice;
-        switch (choice) {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-
-        }
-    }
-
-}
-
-
 
 int main() {
-//    menu();
+    Menu menu;
+    menu.chooseType();
+
     int tab[] ={1,4,2,8,7,6};
     int n = sizeof(tab)/sizeof(int);
     cout<<n<<endl;
