@@ -7,107 +7,81 @@
 #include <iostream>
 #include<random>
 #include <fstream>
-using namespace std;
+#include "dataGenerator.h"
 
 class Menu{
-public:
-    //metoda createArray tworzy tablice z wygenerowanymi randomowo liczbami
-    void createArray(int* tab, int size){
-        cout<<"int";
-        tab = new int[size];
-        srand(time(NULL));
-        for (int i = 0; i < size; ++i) {
-            tab[i] = rand();
-            cout<<tab[i]<<endl;
-        }
-        delete [] tab;
-    }
-
-    void createArray(float* tab, int size){
-        cout<<"float";
-        tab = new float [size];
-        srand(time(NULL));
-        for (int i = 0; i < size; ++i) {
-            tab[i] = rand();
-            cout<<tab[i]<<endl;
-        }
-        delete [] tab;
-
-    }
-
-    void readFile(std::string fileName){
-        ifstream file;
-        file.open( fileName );
+private:
+    template<typename T>
+    static void readFile(std::string_view fileName,T* tab){
+        std::ifstream file;
+        file.open( fileName.data() );
         if(file.is_open()){
-            int* tab;
             int size;
             file>>size;
-            tab = new int[size];
+            tab = new T[size];
             for(int i = 0; i<size;i++){
                 file>>tab[i];
             }
             for(int i =0; i<size;i++){
-                cout<<tab[i]<<" ";
+                std::cout<<tab[i]<<" ";
             }
             delete [] tab;
 
         }else{
-            cout<<"Nie otwarto pliku"<<endl;
+            std::cout<<"Nie otwarto pliku"<<std::endl;
         }
         file.close();
     }
 
+public:
     void chooseType(){
-        bool loop = true;
-        while (loop){
-            cout<<"Wybierz typ badanych danych:"<<endl;
-            cout<<"1. int"<<endl;
-            cout<<"2. float"<<endl;
+        while (true){
+            std::cout<<"Wybierz typ badanych danych:"<<std::endl;
+            std::cout<<"1. int"<<std::endl;
+            std::cout<<"2. float"<<std::endl;
+            std::cout<<"0. Wyjdź"<<std::endl;
             int choice;
-            cin>>choice;
+            std::cin>>choice;
             switch (choice) {
                 case 1:
-                    int type;
-                    showMenu(type);
+                    showMenuInt();
                     break;
                 case 2:
-                    float type1;
-                    showMenu(type1);
+                    showMenuFloat();
                     break;
-
+                case 0:
+                    return;
+                default:
+                    break;
             }
         }
     }
 
-    template<typename T>
-    void showMenu(T type){
-        setlocale(LC_CTYPE, "Polish");
+    void showMenuInt(){
         while (true){
             int choice;
-            cout << "Menu:"<<endl;
-            cout<<"1. Wczytanie tablicy z pliku"<<endl;
-            cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartości"<<endl;
-            cout<<"3. Wyświetlenie ostatnio utworzonej tablicy na ekranie"<<endl;
-            cout<<"4. Uruchomienie wybranego algorytmu na ostatnio utworzonej tablicy"<<endl;
-            cout<<"5. Wyświetlenie posortowanej tablicy na ekranie "<<endl;
-            cout<<"6. Wróć do wyboru typu"<<endl;
-            cin >> choice;
+            std::cout << "Menu:"<<std::endl;
+            std::cout<<"1. Wczytanie tablicy z pliku"<<std::endl;
+            std::cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartości"<<std::endl;
+            std::cout<<"3. Wyświetlenie ostatnio utworzonej tablicy na ekranie"<<std::endl;
+            std::cout<<"4. Uruchomienie wybranego algorytmu na ostatnio utworzonej tablicy"<<std::endl;
+            std::cout<<"5. Wyświetlenie posortowanej tablicy na ekranie "<<std::endl;
+            std::cout<<"0. Powrot"<<std::endl;
+            std::cin >> choice;
+            std::string fileName;
+            int size;
+            dataGenerator generator;//czy da sie zrobić tak żeby przekazywać typ tylko raz do klasy a nie do karzdej metody
+            int *tab{};
             switch (choice) {
                 case 1:
-//                    cout<<"Podaj nazwe pliku"<<endl;
-                    readFile("C:\\Users\\grons\\Desktop\\Studia\\4 sem\\Aizo\\Projekt_Aizo\\probny.txt");
+                    std::cout<<"Podaj nazwe pliku"<<std::endl;
+                    std::cin>>fileName;
+                    readFile(fileName,tab);
                     break;
                 case 2:
-                    int size;
-                    cout<<"Wpisz rozmiar tablicy: "<<endl;
-                    cin>>size;
-                    if(typeid(type)== typeid(int)){
-                        int *tab;
-                        createArray(tab,size);
-                    }else{
-                        float *tab;
-                        createArray(tab, size);
-                    }
+                    std::cout<<"Wpisz rozmiar tablicy: "<<std::endl;
+                    std::cin>>size;
+                    dataGenerator::createRandomArray<int>(tab,size);
                     break;
                 case 3:
                     break;
@@ -115,12 +89,54 @@ public:
                     break;
                 case 5:
                     break;
-                case 6:
-                    chooseType();
-
+                case 0:
+                    return;
+                default:
+                    break;
             }
         }
     }
+
+    void showMenuFloat(){
+        while (true){
+            int choice;
+            std::cout << "Menu:"<<std::endl;
+            std::cout<<"1. Wczytanie tablicy z pliku"<<std::endl;
+            std::cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartości"<<std::endl;
+            std::cout<<"3. Wyświetlenie ostatnio utworzonej tablicy na ekranie"<<std::endl;
+            std::cout<<"4. Uruchomienie wybranego algorytmu na ostatnio utworzonej tablicy"<<std::endl;
+            std::cout<<"5. Wyświetlenie posortowanej tablicy na ekranie "<<std::endl;
+            std::cout<<"0. Powrot"<<std::endl;
+            std::cin >> choice;
+            std::string fileName;
+            int size;
+            dataGenerator generator;//czy da sie zrobić tak żeby przekazywać typ tylko raz do klasy a nie do karzdej metody
+            float *tab{};
+            switch (choice) {
+                case 1:
+                    std::cout<<"Podaj nazwe pliku"<<std::endl;
+                    std::cin>>fileName;
+                    readFile(fileName,tab);
+                    break;
+                case 2:
+                    std::cout<<"Wpisz rozmiar tablicy: "<<std::endl;
+                    std::cin>>size;
+                    dataGenerator::createRandomArray<float>(tab, size);
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 0:
+                    return;
+                default:
+                    break;
+            }
+        }
+    }
+
 
 };
 
