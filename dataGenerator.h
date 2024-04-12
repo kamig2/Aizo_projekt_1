@@ -15,24 +15,24 @@
 class dataGenerator{
 public:
     template<typename T>
-    static void createRandomArray(T* tab, int size){
-        tab = new T[size];
+    void createRandomArray(T* arr, int size){
+        arr = new T[size];
         std::random_device r;
         if constexpr (std::is_same_v<T, int>) {
             std::cout<<"int";
             for (int i = 0; i < size; ++i) {
                 std::default_random_engine e1(r());
                 std::uniform_int_distribution<int> uniformDist(-10000000,10000000);
-                tab[i] = uniformDist(e1);
-                std::cout<<tab[i]<<std::endl;
+                arr[i] = uniformDist(e1);
+                std::cout << arr[i] << std::endl;
             }
         }else{
             std::cout<<"float";
             for (int i = 0; i < size; ++i) {
                 std::mt19937_64 e1(r());
                 std::uniform_real_distribution<float> uniformDist(-10000000,10000000);
-                tab[i] = uniformDist(e1);
-                std::cout<<tab[i]<<std::endl;
+                arr[i] = uniformDist(e1);
+                std::cout << arr[i] << std::endl;
             }
         }
     }

@@ -8,29 +8,30 @@
 #include<random>
 #include <fstream>
 #include "dataGenerator.h"
+#include "currentArray.h"
 
 class Menu{
 private:
     template<typename T>
-    static void readFile(std::string_view fileName,T* tab){
+    static int readFile(std::string_view fileName,T* arr){
         std::ifstream file;
         file.open( fileName.data() );
+        int size = 0;
         if(file.is_open()){
-            int size;
             file>>size;
-            tab = new T[size];
+            arr = new T[size];
             for(int i = 0; i<size;i++){
-                file>>tab[i];
+                file>>arr[i];
             }
             for(int i =0; i<size;i++){
-                std::cout<<tab[i]<<" ";
+                std::cout<<arr[i]<<" ";
             }
-            delete [] tab;
 
         }else{
             std::cout<<"Nie otwarto pliku"<<std::endl;
         }
         file.close();
+        return size;
     }
 
 public:
@@ -58,6 +59,9 @@ public:
     }
 
     void showMenuInt(){
+        int *arr{};
+        int size = 0 ;
+        currentArray curAr(size, arr);
         while (true){
             int choice;
             std::cout << "Menu:"<<std::endl;
@@ -69,21 +73,27 @@ public:
             std::cout<<"0. Powrot"<<std::endl;
             std::cin >> choice;
             std::string fileName;
-            int size;
             dataGenerator generator;//czy da sie zrobić tak żeby przekazywać typ tylko raz do klasy a nie do karzdej metody
-            int *tab{};
             switch (choice) {
                 case 1:
                     std::cout<<"Podaj nazwe pliku"<<std::endl;
                     std::cin>>fileName;
-                    readFile(fileName,tab);
+                    size = readFile(fileName, arr);
+                    std::cout<<size<<std::endl;
+                    if(size !=0){
+                        curAr.setSize(size);
+                        curAr.setArr(arr);
+                    }
                     break;
                 case 2:
                     std::cout<<"Wpisz rozmiar tablicy: "<<std::endl;
                     std::cin>>size;
-                    dataGenerator::createRandomArray<int>(tab,size);
+                    generator.createRandomArray<int>(arr, size);
+                    curAr.setSize(size); //dlaczego jeśli tu przekazuje rozmiar który jest niezerowy w funkcji show array jest zerowy
+                    curAr.setArr(arr);   //jak sprawdzić co jest w tej tablicy
                     break;
                 case 3:
+//                    curAr.showArray();
                     break;
                 case 4:
                     break;
@@ -111,17 +121,17 @@ public:
             std::string fileName;
             int size;
             dataGenerator generator;//czy da sie zrobić tak żeby przekazywać typ tylko raz do klasy a nie do karzdej metody
-            float *tab{};
+            float *arr{};
             switch (choice) {
                 case 1:
                     std::cout<<"Podaj nazwe pliku"<<std::endl;
                     std::cin>>fileName;
-                    readFile(fileName,tab);
+                    readFile(fileName, arr);
                     break;
                 case 2:
                     std::cout<<"Wpisz rozmiar tablicy: "<<std::endl;
                     std::cin>>size;
-                    dataGenerator::createRandomArray<float>(tab, size);
+                    generator.createRandomArray<float>(arr, size);
                     break;
                 case 3:
                     break;
