@@ -25,7 +25,8 @@ void validateMaxHeap(T tab[],int heapSize, int parentIndex){
 }
 
 template<typename T>
-void heapSort(T tab[], int size){
+long long heapSort(T tab[], int size){
+    auto start = std::chrono::high_resolution_clock::now();
     for(int i = size/2-1;i>=0;i--){
         validateMaxHeap(tab,size,i);
     }
@@ -34,6 +35,8 @@ void heapSort(T tab[], int size){
         size--;
         validateMaxHeap(tab,size,0);
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
 }
 

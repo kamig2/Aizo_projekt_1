@@ -6,17 +6,20 @@
 #define PROJEKT_AIZO_INSERTIONSORT_H
 
 template<typename T>
-void insertionSort(T tab[], int size ){
-    int key;
+long long insertionSort(T arr[], int size ){
+    auto start = std::chrono::high_resolution_clock::now();
+    T k;
     for (int i =1; i<size;i++){
-        key = tab[i];
+        k = arr[i];
         int j = i;
-        while (j>0 and tab[j-1]>key){
-            tab[j]=tab[j-1];
+        while (j>0 and arr[j - 1] > k){
+            arr[j]=arr[j - 1];
             j--;
         }
-        tab[j]=key;
+        arr[j]=k;
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 }
 
 
