@@ -12,8 +12,8 @@ int main() {
     Menu menu;
 //    menu.chooseType();
     dataGenerator g;
-//    g.generateArrayToTests();
-    g.generateSortedReversArrToTests();
+    g.generateArrayToTests();
+//    g.generateSortedReversArrToTests();
 //g.generateDataToTests();
     /*int tab[] ={1,4,2,8,7,6};
     int n = sizeof(tab)/sizeof(int);

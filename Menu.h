@@ -133,8 +133,9 @@ public:
                     if(version==1){
                         shellSort1(cArr, size);
                     }else if(version==2){
-
+                        shellSort2(cArr,size);
                     }
+
                     sortedArr.setSize(size);
                     sortedArr.setArr(cArr);
                     break;

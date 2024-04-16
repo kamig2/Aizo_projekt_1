@@ -36,7 +36,7 @@ long long shellSort1(T tab[], int size){//dodać drugi algorytm o mniejszej zlo�
 }
 
 template<typename T>
-long long sortowanieShella(T arr[], int n) {
+long long shellSort2(T arr[], int n) {
     auto start = std::chrono::high_resolution_clock::now();
     // Obliczenie początkowej odległości Hibbarda
     int k = 1;

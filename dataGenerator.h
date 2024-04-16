@@ -136,17 +136,53 @@ public:
             std::cerr << "Nie można otworzyć pliku " << fileName << " do zapisu!" << std::endl;
             return;
         }
-        std::cout<<"Plik utworzony";
         file<<message<<std::endl;
         file.close();
 
     }
+    void save(int size){
+        std::string message = "uśreniony czas pomiaru tablicy " + std::to_string(size) + " elementowej";
+        saveToCsvFile("insertionSortInt.csv", timeInsertionSortInt, message);
+        saveToCsvFile("insertionSortFloat.csv", timeInsertionSortFloat, message);
+        saveToCsvFile("heapSortInt.csv",timeHeapSort,message);
+        saveToCsvFile("shellSort1Int.csv",timeShellSort1,message);
+        saveToCsvFile("shellSort2Int.csv",timeShellSort2,message);
+        saveToCsvFile("quickSortRandomInt.csv",timeQuickSortRandom,message);
+        saveToCsvFile("quickSortLeftInt.csv",timeQuickSortLeft,message);
+        saveToCsvFile("quickSortRightInt.csv",timeQuickSortRight,message);
+        saveToCsvFile("quickSortMiddleInt.csv",timeQuickSortMiddle,message);
+    }
+    void typeOfDataMessage(std::string message){
+        saveToCsvFile("insertionSortInt.csv",message);
+        saveToCsvFile("insertionSortFloat.csv",message);
+        saveToCsvFile("heapSortInt.csv",message);
+        saveToCsvFile("shellSort1Int.csv",message);
+        saveToCsvFile("shellSort2Int.csv",message);
+        saveToCsvFile("quickSortLeftInt.csv",message);
+        saveToCsvFile("quickSortRightInt.csv",message);
+        saveToCsvFile("quickSortMiddleInt.csv",message);
+        saveToCsvFile("quickSortRandomInt.csv",message);
+
+    }
+    void setTimeToZero(){
+        timeHeapSort=0;
+        timeInsertionSortInt=0;
+        timeShellSort1=0;
+        timeShellSort2 =0 ;
+        timeQuickSortLeft = 0;
+        timeQuickSortRight = 0;
+        timeQuickSortMiddle = 0;
+        timeQuickSortRandom = 0;
+
+    }
 
     void generateArrayToTests(){
-        int sizeOfArray[] = {1000,20,40000,80000,100000,120000,160000};
+        int sizeOfArray[] = {10,20,40000,80000,100000,120000,160000};
         int *arr{};
         int *cArr{};
-        saveToCsvFile("insertionSortInt","randomowa tablica");
+        float *arrFloat{};
+        typeOfDataMessage("randomowa tablica");
+
 
         for(int i=0;i<7;i++){
             for(int j=0;j<100;j++){
@@ -156,27 +192,17 @@ public:
                 cArr = copyArray(arr,size);
                 timeInsertionSortInt += insertionSort(cArr, size);
 
-                cArr = copyArray(arr,size);
-                /*std::cout<<"nieposortowana"<<std::endl;
-                for(int k =0;k<size;k++){
-                    std::cout<<cArr[k]<<" ,";
-                }*/
-                timeHeapSort += heapSort(cArr,size);
-                /*std::cout<<std::endl<<"posortowana"<<std::endl;
-                for(int k =0;k<size;k++){
-                    std::cout<<cArr[k]<<" ,";
-                }*/
-                cArr = copyArray(arr, size);
-               /* std::cout<<std::endl<<"nieposortowana"<<std::endl;
-                for(int k =0;k<size;k++){
-                    std::cout<<cArr[k]<<" ,";
-                }*/
+                arrFloat = createRandomArray(arrFloat,size);
+                timeInsertionSortFloat += insertionSort(arrFloat, size);
 
+                cArr = copyArray(arr,size);
+                timeHeapSort += heapSort(cArr,size);
+
+                cArr = copyArray(arr, size);
                 timeShellSort1 += shellSort1(cArr, size);
-                /*std::cout<<std::endl<<"posortowana"<<std::endl;
-                for(int k =0;k<size;k++){
-                    std::cout<<cArr[k]<<" ,";
-                }*/
+
+                cArr = copyArray(arr, size);
+                timeShellSort2 = shellSort2(cArr,size);
 
                /* cArr = copyArray(arr,size);
                 timeQuickSortLeft += quickSort1(cArr,0,size,0);
@@ -195,12 +221,9 @@ public:
 
             }
 
-            std::string message = "uśreniony czas pomiaru tablicy " + std::to_string(sizeOfArray[i]) + " elementowej";
-            saveToCsvFile("insertionSortint.csv", timeInsertionSortInt, message);
-            saveToCsvFile("heapSortInt.csv",timeHeapSort,message);
-            timeHeapSort=0;
-            timeInsertionSortInt=0;
-            timeShellSort1=0;
+            save(sizeOfArray[i]);
+            setTimeToZero();
+
 
         }
         delete[] cArr;
@@ -210,6 +233,8 @@ public:
         int sizeOfArray[] = {10,20,40000,80000,100000,120000,160000};
         int *arr{};
         int *cArr{};
+        float *arrFloat{};
+        typeOfDataMessage("posortowana tablica");
 
         for(int i=0;i<7;i++){
             for(int j=0;j<100;j++){
@@ -219,35 +244,23 @@ public:
                 cArr = copyArray(arr,size);
                 timeInsertionSortInt += insertionSort(cArr, size);
 
+                arrFloat = createSortedArray(arrFloat,size);
+                timeInsertionSortFloat += insertionSort(arrFloat, size);
+
                 cArr = copyArray(arr,size);
                 timeHeapSort += heapSort(cArr,size);
-                cArr = copyArray(arr, size);
-                /* std::cout<<std::endl<<"nieposortowana"<<std::endl;
-                 for(int k =0;k<size;k++){
-                     std::cout<<cArr[k]<<" ,";
-                 }*/
 
+                cArr = copyArray(arr, size);
                 timeShellSort1 += shellSort1(cArr, size);
-                /*std::cout<<std::endl<<"posortowana"<<std::endl;
-                for(int k =0;k<size;k++){
-                    std::cout<<cArr[k]<<" ,";
-                }*/
+
 
 
 
             }
 
-            std::string message = "uśreniony czas pomiaru tablicy " + std::to_string(sizeOfArray[i]) + " elementowej";
-            saveToCsvFile("insertionSortint.csv", timeInsertionSortInt, message);
-            saveToCsvFile("heapSortInt.csv",timeHeapSort,message);
-            timeHeapSort=0;
-            timeInsertionSortInt=0;
-            timeShellSort1=0;
-            timeShellSort2 =0 ;
-            timeQuickSortLeft = 0;
-            timeQuickSortRight = 0;
-            timeQuickSortMiddle = 0;
-            timeQuickSortRandom = 0;
+            save(sizeOfArray[i]);
+            setTimeToZero();
+
 
         }
         delete[] cArr;
@@ -259,23 +272,17 @@ public:
         int *arr{};
         int *cArr{};
         float *arrFloat{};
-//        float *cArrFloat{};
+        typeOfDataMessage("posortowana odwrócona tablica");
+
 
 
         for(int i=0;i<7;i++){
             for(int j=0;j<100;j++){
                 int size =sizeOfArray[i];
                 arr = createReverseSortedArray(arr,size);
+
                 arrFloat = createReverseSortedArray(arrFloat,size);
-                 std::cout<<std::endl<<"nieposortowana"<<std::endl;
-                for(int k =0;k<size;k++){
-                    std::cout<<arrFloat[k]<<" ,";
-                }
                 timeInsertionSortFloat += insertionSort(arrFloat, size);
-                std::cout<<std::endl<<"posortowana"<<std::endl;
-                for(int k =0;k<size;k++){
-                    std::cout<<arrFloat[k]<<" ,";
-                }
 
                 cArr = copyArray(arr,size);
                 timeInsertionSortInt += insertionSort(cArr, size);
@@ -290,17 +297,8 @@ public:
 
             }
 
-            std::string message = "uśreniony czas pomiaru tablicy " + std::to_string(sizeOfArray[i]) + " elementowej";
-            saveToCsvFile("insertionSortint.csv", timeInsertionSortInt, message);
-            saveToCsvFile("heapSortInt.csv",timeHeapSort,message);
-            timeHeapSort=0;
-            timeInsertionSortInt=0;
-            timeShellSort1=0;
-            timeShellSort2 =0 ;
-            timeQuickSortLeft = 0;
-            timeQuickSortRight = 0;
-            timeQuickSortMiddle = 0;
-            timeQuickSortRandom = 0;
+            save(sizeOfArray[i]);
+            setTimeToZero();
 
         }
         delete[] cArr;
@@ -312,6 +310,8 @@ public:
         int sizeOfArray[] = {10,20,40000,80000,100000,120000,160000};
         int *arr{};
         int *cArr{};
+        float *arrFloat{};
+        typeOfDataMessage("posortowana w 33%");
 
         for(int i=0;i<7;i++){
             for(int j=0;j<100;j++){
@@ -320,6 +320,9 @@ public:
 
                 cArr = copyArray(arr,size);
                 timeInsertionSortInt += insertionSort(cArr, size);
+
+                arrFloat = createSortedArray33(arrFloat,size);
+                timeInsertionSortFloat += insertionSort(arrFloat, size);
 
                 cArr = copyArray(arr,size);
                 timeHeapSort += heapSort(cArr,size);
@@ -330,17 +333,9 @@ public:
 
             }
 
-            std::string message = "uśreniony czas pomiaru tablicy " + std::to_string(sizeOfArray[i]) + " elementowej";
-            saveToCsvFile("insertionSortint.csv", timeInsertionSortInt, message);
-            saveToCsvFile("heapSortInt.csv",timeHeapSort,message);
-            timeHeapSort=0;
-            timeInsertionSortInt=0;
-            timeShellSort1=0;
-            timeShellSort2 =0 ;
-            timeQuickSortLeft = 0;
-            timeQuickSortRight = 0;
-            timeQuickSortMiddle = 0;
-            timeQuickSortRandom = 0;
+            save(sizeOfArray[i]);
+            setTimeToZero();
+
 
         }
         delete[] cArr;
@@ -350,14 +345,8 @@ public:
     void generateSortedArrToTests66(){
         int sizeOfArray[] = {10,20,40000,80000,100000,120000,160000};
         int *arr{};
-        /*long long timeInsertionSortInt = 0;
-        long long timeShellSort1 =0 ;
-        long long timeShellSort2 =0 ;
-        long long timeHeapSort = 0;
-        long long timeQuickSortLeft = 0;
-        long long timeQuickSortRight = 0;
-        long long timeQuickSortMiddle = 0;
-        long long timeQuickSortRandom = 0;*/
+        float *arrFloat{};
+        typeOfDataMessage("Posortowana w 66%");
 
         int *cArr{};
 
@@ -369,27 +358,21 @@ public:
                 cArr = copyArray(arr,size);
                 timeInsertionSortInt += insertionSort(cArr, size);
 
+                arrFloat = createSortedArray66(arrFloat,size);
+                timeInsertionSortFloat += insertionSort(arrFloat, size);
+
                 cArr = copyArray(arr,size);
                 timeHeapSort += heapSort(cArr,size);
 
                 cArr = copyArray(arr, size);
                 timeShellSort1 += shellSort1(cArr, size);
 
-
-
             }
 
-            std::string message = "uśreniony czas pomiaru tablicy " + std::to_string(sizeOfArray[i]) + " elementowej";
-            saveToCsvFile("insertionSortint.csv", timeInsertionSortInt, message);
-            saveToCsvFile("heapSortInt.csv",timeHeapSort,message);
-            timeHeapSort=0;
-            timeInsertionSortInt=0;
-            timeShellSort1=0;
-            timeShellSort2 =0 ;
-            timeQuickSortLeft = 0;
-            timeQuickSortRight = 0;
-            timeQuickSortMiddle = 0;
-            timeQuickSortRandom = 0;
+            save(sizeOfArray[i]);
+
+            setTimeToZero();
+
 
         }
         delete[] cArr;
@@ -397,7 +380,7 @@ public:
 
     }
 
-    void generateDataToTests(){//dodać porównanie flota dla insertion sort do wszystkich funkcji
+    void generateDataToTests(){
         generateArrayToTests();
         generateSortedArrToTests();
         generateSortedReversArrToTests();
