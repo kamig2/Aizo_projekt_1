@@ -24,30 +24,7 @@ private:
     long long timeQuickSortMiddle = 0;
     long long timeQuickSortRandom = 0;
 
-
-public:
-    template<typename T>
-    T* createRandomArray(T* arr, int size){
-        arr = new T[size];
-        std::random_device r;
-        if constexpr (std::is_same_v<T, int>) {
-//            std::cout<<"int";
-            for (int i = 0; i < size; ++i) {
-                std::default_random_engine e1(r());
-                std::uniform_int_distribution<int> uniformDist(-10000000,10000000);
-                arr[i] = uniformDist(e1);
-            }
-        }else{
-//            std::cout<<"float";
-            for (int i = 0; i < size; ++i) {
-                std::mt19937_64 e1(r());
-                std::uniform_real_distribution<float> uniformDist(-10000000,10000000);
-                arr[i] = uniformDist(e1);
-//                std::cout << arr[i] << std::endl;
-            }
-        }
-        return arr;
-    }
+    //metoda tworząca posortowaną tablice o danym rozmiarze
     template<typename T>
     T* createSortedArray(T* arr, int size){
         arr = new T[size];
@@ -61,12 +38,13 @@ public:
         arr= new T[size];
         T var =0;
         for(int i = size-1;i>=0;i--){
-            std::cout<<"petla";
             arr[i]=var;
             var++;
         }
         return arr;
     }
+
+    //metoda tworząca posortowaną tablice w 33%
     template<typename T>
     T*  createSortedArray33(T* arr, int size){
         arr = new T[size];
@@ -83,8 +61,12 @@ public:
         for (int i = 0; i < size2; ++i) {
             arr[size1 + i] = randomArr[i];
         }
+        delete[] sortedArr;
+        delete[] randomArr;
         return arr;
     }
+
+    //metoda tworząca posortowaną tablice w 66%
     template<typename T>
     T* createSortedArray66(T* arr, int size){
         arr = new T[size];
@@ -107,14 +89,7 @@ public:
 
     }
 
-    template<typename T>
-    T* copyArray(T* arr, int size){
-        T *cArr = new T[size];
-        for(int i = 0; i < size; i++){
-            cArr[i] = arr[i];
-        }
-        return cArr;
-    }
+    //metoda zampisująca dane do pliku csv
     static void saveToCsvFile(std::string fileName, long long time , std::string message){
         std::ofstream file(fileName,std::ios::out | std::ios::app);
 
@@ -122,13 +97,13 @@ public:
             std::cerr << "Nie można otworzyć pliku " << fileName << " do zapisu!" << std::endl;
             return;
         }
-        std::cout<<"Plik utworzony";
         time /=100;
         file<<message<<std::endl;
         file<<time<<" ms"<<std::endl;
         file.close();
 
     }
+    //metoda zapisująca wiadomości do pliku csv
     static void saveToCsvFile(std::string fileName, std::string message){
         std::ofstream file(fileName,std::ios::out | std::ios::app);
 
@@ -140,6 +115,8 @@ public:
         file.close();
 
     }
+
+    //metoda wywołująca zapis danych do pliku dla każdego sortowania
     void save(int size){
         std::string message = "uśreniony czas pomiaru tablicy " + std::to_string(size) + " elementowej";
         saveToCsvFile("insertionSortInt.csv", timeInsertionSortInt, message);
@@ -152,6 +129,8 @@ public:
         saveToCsvFile("quickSortRightInt.csv",timeQuickSortRight,message);
         saveToCsvFile("quickSortMiddleInt.csv",timeQuickSortMiddle,message);
     }
+
+    //metoda wywołująca zapis wiadomości do pliku dla każdego sortowania
     void typeOfDataMessage(std::string message){
         saveToCsvFile("insertionSortInt.csv",message);
         saveToCsvFile("insertionSortFloat.csv",message);
@@ -164,6 +143,8 @@ public:
         saveToCsvFile("quickSortRandomInt.csv",message);
 
     }
+
+    //metoda ustawiająca wartości czasów dla wszystkich sortowań na 0
     void setTimeToZero(){
         timeHeapSort=0;
         timeInsertionSortInt=0;
@@ -176,18 +157,19 @@ public:
 
     }
 
+    //metoda wykonująca sortowania dla losowych danych w tablicach o różnych wielkościach
     void generateArrayToTests(){
-        int sizeOfArray[] = {10,20,40000,80000,100000,120000,160000};
-        int *arr{};
+        int sizeOfArray[] = {10,20,40000,80000,100000,120000,160000};//wielkości tablic
+        int *arr{};//tablica dla inta
         int *cArr{};
-        float *arrFloat{};
-        typeOfDataMessage("randomowa tablica");
+        float *arrFloat{};//tablica dla float
+        typeOfDataMessage("randomowa tablica");//wywołanie metody zapisującej wiadomość do plików csv
 
 
-        for(int i=0;i<7;i++){
-            for(int j=0;j<100;j++){
+        for(int i=0;i<7;i++){//pętla przechodząca przez tablice rozmiarów
+            for(int j=0;j<100;j++){//pętla wykonująca 100 pomiarów dla jednej wielkości tablicy
                 int size =sizeOfArray[i];
-                arr = createRandomArray(arr,size);
+                arr = createRandomArray(arr,size);//utworzenie losowej tablicy
 
                 cArr = copyArray(arr,size);
                 timeInsertionSortInt += insertionSort(cArr, size);
@@ -204,40 +186,41 @@ public:
                 cArr = copyArray(arr, size);
                 timeShellSort2 = shellSort2(cArr,size);
 
-               /* cArr = copyArray(arr,size);
-                timeQuickSortLeft += quickSort1(cArr,0,size,0);
+                cArr = copyArray(arr,size);
+                timeQuickSortLeft += quickSort(cArr,size,0);
 
                 cArr = copyArray(arr,size);
-                timeQuickSortRight += quickSort1(cArr,0,size,1);
+                timeQuickSortRight += quickSort(cArr,size,1);
 
                 cArr = copyArray(arr,size);
-                timeQuickSortMiddle += quickSort1(cArr,0,size,2);
+                timeQuickSortMiddle += quickSort(cArr,size,2);
 
                 cArr = copyArray(arr,size);
-                timeQuickSortRandom += quickSort1(cArr,0,size,3);
-*/
+                timeQuickSortRandom += quickSort(cArr,size,3);
 
 
 
             }
 
-            save(sizeOfArray[i]);
-            setTimeToZero();
+            save(sizeOfArray[i]);//zapis czasów sortowania do pliku csv
+            setTimeToZero();//ustawienie wartości czasu na zero
 
 
         }
         delete[] cArr;
         delete[] arr;
     }
+
+    //metoda wykonująca sortowania dla posortowanych danych w tablicach o różnych wielkościach
     void generateSortedArrToTests(){
-        int sizeOfArray[] = {10,20,40000,80000,100000,120000,160000};
+        int sizeOfArray[] = {10,20,40000,80000,100000,120000,160000};//wielkości tablic
         int *arr{};
         int *cArr{};
         float *arrFloat{};
-        typeOfDataMessage("posortowana tablica");
+        typeOfDataMessage("posortowana tablica");//wywołanie metody zapisującej wiadomość do plików csv
 
-        for(int i=0;i<7;i++){
-            for(int j=0;j<100;j++){
+        for(int i=0;i<7;i++){//pętla przechodząca przez tablice rozmiarów
+            for(int j=0;j<100;j++){//pętla wykonująca 100 pomiarów dla jednej wielkości tablicy
                 int size =sizeOfArray[i];
                 arr = createSortedArray(arr,size);
 
@@ -253,7 +236,17 @@ public:
                 cArr = copyArray(arr, size);
                 timeShellSort1 += shellSort1(cArr, size);
 
+                cArr = copyArray(arr,size);
+                timeQuickSortLeft += quickSort(cArr,size,0);
 
+                cArr = copyArray(arr,size);
+                timeQuickSortRight += quickSort(cArr,size,1);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortMiddle += quickSort(cArr,size,2);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortRandom += quickSort(cArr,size,3);
 
 
             }
@@ -293,6 +286,18 @@ public:
                 cArr = copyArray(arr, size);
                 timeShellSort1 += shellSort1(cArr, size);
 
+                cArr = copyArray(arr,size);
+                timeQuickSortLeft += quickSort(cArr,size,0);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortRight += quickSort(cArr,size,1);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortMiddle += quickSort(cArr,size,2);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortRandom += quickSort(cArr,size,3);
+
 
 
             }
@@ -329,6 +334,18 @@ public:
 
                 cArr = copyArray(arr, size);
                 timeShellSort1 += shellSort1(cArr, size);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortLeft += quickSort(cArr,size,0);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortRight += quickSort(cArr,size,1);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortMiddle += quickSort(cArr,size,2);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortRandom += quickSort(cArr,size,3);
 
 
             }
@@ -367,6 +384,18 @@ public:
                 cArr = copyArray(arr, size);
                 timeShellSort1 += shellSort1(cArr, size);
 
+                cArr = copyArray(arr,size);
+                timeQuickSortLeft += quickSort(cArr,size,0);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortRight += quickSort(cArr,size,1);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortMiddle += quickSort(cArr,size,2);
+
+                cArr = copyArray(arr,size);
+                timeQuickSortRandom += quickSort(cArr,size,3);
+
             }
 
             save(sizeOfArray[i]);
@@ -378,6 +407,36 @@ public:
         delete[] cArr;
         delete[] arr;
 
+    }
+
+public:
+    template<typename T>
+    T* copyArray(T* arr, int size){
+        T* cArr = new T[size];
+        for(int i = 0; i < size; i++){
+            cArr[i] = arr[i];
+        }
+        return cArr;
+    }
+
+    template<typename T>
+    T* createRandomArray(T* arr, int size){
+        arr = new T[size];
+        std::random_device r;
+        if constexpr (std::is_same_v<T, int>) {
+            for (int i = 0; i < size; ++i) {
+                std::default_random_engine e1(r());
+                std::uniform_int_distribution<int> uniformDist(-100,100);
+                arr[i] = uniformDist(e1);
+            }
+        }else{
+            for (int i = 0; i < size; ++i) {
+                std::mt19937_64 e1(r());
+                std::uniform_real_distribution<float> uniformDist(-100,100);
+                arr[i] = uniformDist(e1);
+            }
+        }
+        return arr;
     }
 
     void generateDataToTests(){

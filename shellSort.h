@@ -22,7 +22,7 @@ long long shellSort1(T tab[], int size){//dodać drugi algorytm o mniejszej zlo�
     h = d[0];
     while(h>0){
         for (int i = h; i < size; i+=1) {
-            int tmp = tab[i];
+            T tmp = tab[i];
             int j;
             for(j=i;j>=h && tab[j-h]>tmp;j-=h){
                 tab[j]= tab[j-h];
@@ -49,7 +49,7 @@ long long shellSort2(T arr[], int n) {
         // Przechodzenie przez podtablice
         for (int i = k; i < n; ++i) {
             // Zapamiętanie elementu, który będzie porównywany
-            int temp = arr[i];
+            T temp = arr[i];
 
             // Przesunięcie elementów większych od zapamiętanego elementu
             int j = i;

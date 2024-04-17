@@ -28,7 +28,6 @@ public:
 
     void setSize(int size) {
         this->size = size;
-//        std::cout<<"setSize: "<<this->size<<std::endl;
     }
 
     void setArr(T *arr) {
@@ -36,9 +35,7 @@ public:
     }
 
     void showArray(){
-        std::cout<<size<<std::endl;
         for(int i =0; i < size; i++ ){
-//            std::cout<<"petla"<<std::endl;
             std::cout << array[i] << ", ";
 
         }

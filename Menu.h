@@ -7,23 +7,24 @@
 #include <iostream>
 #include<random>
 #include <fstream>
+#include <string>
 #include "dataGenerator.h"
 #include "currentArray.h"
 
-class Menu{
+class Menu{ //klasa reprezentująca menu
 private:
     template<typename T>
-    static int readFile(std::string_view fileName,T* arr){
+    static T* readFile(std::string_view fileName,T* arr,int *size){ //metoda odczytująca dane z pliku tekstowego
+        std::cout<<fileName<<std::endl;
         std::ifstream file;
         file.open( fileName.data());
-        int size = 0;
         if(file.is_open()){
-            file>>size;
-            arr = new T[size];
-            for(int i = 0; i<size;i++){
+            file>>*size;
+            arr = new T[*size];
+            for(int i = 0; i<*size;i++){
                 file>>arr[i];
             }
-            for(int i =0; i<size;i++){
+            for(int i =0; i<*size;i++){
                 std::cout<<arr[i]<<" ";
             }
             file.close();
@@ -31,19 +32,11 @@ private:
         }else{
             std::cout<<"Nie otwarto pliku"<<std::endl;
         }
-        return size;
+        return arr;
     }
 
-public:
-   /* void chooseMode(){
-        while(true){
-            std::cout<<"Wybierz tryb pracy:"<<std::endl;
-            std::cout<<"1. Automatyczna generacja danych"<<std::endl;
-            std::cout<<"2."
 
-        }
-    }*/
-    void chooseType(){
+    void chooseType(){//metoda wyboru typu danych
         while (true){
             std::cout<<"Wybierz typ badanych danych:"<<std::endl;
             std::cout<<"1. int"<<std::endl;
@@ -65,98 +58,127 @@ public:
             }
         }
     }
+    void menu(){
+        std::cout << "Menu:"<<std::endl;
+        std::cout<<"1. Wczytanie tablicy z pliku"<<std::endl;
+        std::cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartości"<<std::endl;
+        std::cout<<"3. Wyświetlenie ostatnio utworzonej tablicy na ekranie"<<std::endl;
+        std::cout<<"4. insertion sort"<<std::endl;
+        std::cout<<"5. heap sort"<<std::endl;
+        std::cout<<"6. shell sort"<<std::endl;
+        std::cout<<"7. quick sort"<<std::endl;
+        std::cout<<"8. Wyświetlenie posortowanej tablicy na ekranie "<<std::endl;
+        std::cout<<"0. Powrot"<<std::endl;
+    }
 
 
-    void showMenuInt(){
-        int *arr = {};
-        int *cArr = {};
+    void showMenuInt(){//metoda zawierająca menu dla danych typu int
+        int *arr = {}; //utworzenie wskaźnika na pustą tablicę typu int
+        int *cArr = {};//utworzenie wskaźnika na pustą tablicę typu int gdzie będzie kopiowana tablica
         int size = 0 ;
         currentArray curArr(size, arr);
         currentArray sortedArr(size, cArr);
-        dataGenerator generator;//czy da sie zrobić tak żeby przekazywać typ tylko raz do klasy a nie do karzdej metody
-        while (true){
+        dataGenerator generator;
+        while (true){//utworzenie pętli, która tworzy menu
             int choice;
-            std::cout << "Menu:"<<std::endl;
-            std::cout<<"1. Wczytanie tablicy z pliku"<<std::endl;
-            std::cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartości"<<std::endl;
-            std::cout<<"3. Wyświetlenie ostatnio utworzonej tablicy na ekranie"<<std::endl;
-            std::cout<<"4. insertion sort"<<std::endl;
-            std::cout<<"5. heap sort"<<std::endl;
-            std::cout<<"6. shell sort"<<std::endl;
-            std::cout<<"7. quick sort"<<std::endl;
-            std::cout<<"8. Wyświetlenie posortowanej tablicy na ekranie "<<std::endl;
-            std::cout<<"0. Powrot"<<std::endl;
-            std::cin >> choice;
+            menu();//wyświetlenie opcji menu na ekranie
+            std::cin >> choice;//sczytanie wyboru z konsoli
             std::string fileName;
             switch (choice) {
-                case 1:
+                case 1://wybór pierwszy umożliwia wczytanie tablicy z pliku txt
                     std::cout<<"Podaj nazwe pliku"<<std::endl;
-                    std::cin>>fileName;
-                    size = readFile(fileName, arr);//czmu ni moge otworzyć pliku?
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::getline(std::cin,fileName);
+                    arr = readFile(fileName, arr,&size);
                     std::cout<<size<<std::endl;
                     if(size !=0){
+                        //ustawienie wartości ostatnio sczytanej tablicy
                         curArr.setSize(size);
                         curArr.setArr(arr);
                     }
                     break;
-                case 2:
+                case 2://wybór drugi umożliwia generacje losowych liczb
                     std::cout<<"Wpisz rozmiar tablicy: "<<std::endl;
                     std::cin>>size;
+                    //wywołanie funkcji generującej liczby losowe
                     arr = generator.createRandomArray<int>(arr, size);
+                    //ustawienie wartości ostatnio sczytanej tablicy
                     curArr.setSize(size);
                     curArr.setArr(arr);
                     break;
-                case 3:
-                    curArr.showArray();
+                case 3://wybór trzeci umożliwiający wyświetlenie ostatnio utworzonej tablicy
+                    if(size!=0){
+                        //wywołanie funkcji wyświetlającej obecną tablicę
+                        curArr.showArray();
+                    }else{
+                        std::cout<<"Nie utworzono jeszcze żadnej tablicy"<<std::endl;
+                    }
                     break;
-                case 4:
-                    cArr = generator.copyArray<int>( arr, size );
-                    insertionSort(cArr,size);
-                    sortedArr.setSize(size);
+                case 4://wybór czwarty umożliwiający wykonanie sortowania insertion sort na kopii ostatnio utworzonej tablicy
+                    cArr = generator.copyArray<int>( arr, size ); //utworzenie kopii tablicy
+                    insertionSort(cArr,size); //wywołanie funkcji insertion sort
+                    sortedArr.setSize(size); //ustawienie wartości posortowanej tablicy
                     sortedArr.setArr(cArr);
                     break;
-                case 5:
-                    cArr = generator.copyArray<int>( arr, size );
-                    heapSort(cArr,size);
-                    sortedArr.setSize(size);
+                case 5://wybór piąty umożliwiający wykonanie sortowania heap sort na kopii ostatnio utworzonej tablicy
+                    cArr = generator.copyArray<int>( arr, size ); //utworzenie kopii tablicy
+                    heapSort(cArr,size);//wywołanie funkcji heap sort
+                    sortedArr.setSize(size);//ustawienie wartości posortowanej tablicy
                     sortedArr.setArr(cArr);
                     break;
-                case 6:
-                    std::cout<<"Wybierz wersje sortowania shella: "<<std::endl;
+                case 6://wybór szósty umożliwiający wykonanie sortowania shell sort na kopii ostatnio utworzonej tablicy
+                    std::cout<<"Wybierz wersje sortowania shella: "<<std::endl;//wyświetlenie opcji wyboru dla sortowania shella
                     std::cout<<"1. Wersja pierwsza"<<std::endl;
                     std::cout<<"2. Wersja druga"<<std::endl;
                     std::cout<<"0. Powrot"<<std::endl;
                     int version;
                     std::cin>>version;
                     if(version==0) break;
-                    cArr = generator.copyArray<int>( arr, size );
+                    cArr = generator.copyArray<int>( arr, size );//utworzenie kopii tablicy
                     if(version==1){
-                        shellSort1(cArr, size);
+                        shellSort1(cArr, size);//wywołanie pierwszej funkcji shella
                     }else if(version==2){
-                        shellSort2(cArr,size);
+                        shellSort2(cArr,size); //wywołanie drugiej funkcji shella
                     }
 
+                    //ustawienie wartości posortowanej tablicy
                     sortedArr.setSize(size);
                     sortedArr.setArr(cArr);
                     break;
-                case 7:
-                    std::cout<<"Wybierz pozycje pivota:"<<std::endl;
+                case 7://wybór siódmy umożliwiający wykonanie sortowania quick sort na kopii ostatnio utworzonej tablicy
+                    std::cout<<"Wybierz pozycje pivota:"<<std::endl;//wyświetlenie opcji wyboru dla quick sorta
                     std::cout<<"1. Lewy"<<std::endl;
                     std::cout<<"2. Prawy"<<std::endl;
                     std::cout<<"3. Srodkowy"<<std::endl;
                     std::cout<<"4. Losowy"<<std::endl;
                     std::cout<<"0. Powrot"<<std::endl;
+                    cArr = generator.copyArray<int>( arr, size );//utworzenie kopii tablicy
                     int pivot;
                     std::cin >> pivot;
                     switch(pivot){
-                        case 1:
-                            quickSort1(cArr,0,size-1,0);//nie działa
+                        case 1://wywołanie funkcji quick sort dla lewego pivota
+                            quickSort(cArr,size,0);
+                            //ustawienie wartości posortowanej tablicy
+                            sortedArr.setSize(size);
+                            sortedArr.setArr(cArr);
                             break;
-                        case 2:
+                        case 2://wywołanie funkcji quick sort dla prawego pivota
+                            quickSort(cArr,size,1);
+                            //ustawienie wartości posortowanej tablicy
+                            sortedArr.setSize(size);
+                            sortedArr.setArr(cArr);
                             break;
-                        case 3:
+                        case 3://wywołanie funkcji quick sort dla środkowego pivota
+                            quickSort(cArr,size,2);
+                            //ustawienie wartości posortowanej tablicy
+                            sortedArr.setSize(size);
+                            sortedArr.setArr(cArr);
                             break;
-                        case 4:
+                        case 4://wywołanie funkcji quick sort dla losowego pivota
+                            quickSort(cArr,size,3);
+                            //ustawienie wartości posortowanej tablicy
+                            sortedArr.setSize(size);
+                            sortedArr.setArr(cArr);
                             break;
                         case 0:
                             break;
@@ -165,8 +187,12 @@ public:
                     }
 
                     break;
-                case 8:
+                case 8://wybór ósmy umożliwia wyświetlenie posortowanej tablicy
                     sortedArr.showArray();
+                    /*if(sortedArr.getSize != 0){
+                    }else{
+                        std::cout<<"Nie posortowano jeszcze żadnej tablicy"<<std::endl;
+                    }*/
                     break;
                 case 0:
                     return;
@@ -176,43 +202,156 @@ public:
         }
     }
 
-    void showMenuFloat(){
+    void showMenuFloat(){//metoda zawierająca menu dla danych typu float
+        float *arr = {};  //utworzenie wskaźnika na pustą tablicę typu float
+        float *cArr = {}; //utworzenie wskaźnika na pustą tablicę typu float gdzie będzie kopiowana tablica
+        int size = 0 ;
+        currentArray curArr(size, arr);
+        currentArray sortedArr(size, cArr);
+        dataGenerator generator;
         while (true){
             int choice;
-            std::cout << "Menu:"<<std::endl;
-            std::cout<<"1. Wczytanie tablicy z pliku"<<std::endl;
-            std::cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartości"<<std::endl;
-            std::cout<<"3. Wyświetlenie ostatnio utworzonej tablicy na ekranie"<<std::endl;
-            std::cout<<"4. Uruchomienie wybranego algorytmu na ostatnio utworzonej tablicy"<<std::endl;
-            std::cout<<"5. Wyświetlenie posortowanej tablicy na ekranie "<<std::endl;
-            std::cout<<"0. Powrot"<<std::endl;
+            menu();
             std::cin >> choice;
             std::string fileName;
-            int size;
-            dataGenerator generator; //czy da sie zrobić tak żeby przekazywać typ tylko raz do klasy a nie do karzdej metody
-            float *arr{};
             switch (choice) {
-                case 1:
+                case 1://wybór pierwszy umożliwia wczytanie tablicy z pliku txt
                     std::cout<<"Podaj nazwe pliku"<<std::endl;
-                    std::cin>>fileName;
-                    readFile(fileName, arr);
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::getline(std::cin,fileName);
+                    arr = readFile(fileName, arr,&size);
+                    std::cout<<size<<std::endl;
+                    if(size !=0){
+                        //ustawienie wartości ostatnio sczytanej tablicy
+                        curArr.setSize(size);
+                        curArr.setArr(arr);
+                    }
                     break;
-                case 2:
+                case 2://wybór drugi umożliwia generacje losowych liczb
                     std::cout<<"Wpisz rozmiar tablicy: "<<std::endl;
                     std::cin>>size;
+                    //wywołanie funkcji generującej liczby losowe
                     arr = generator.createRandomArray<float>(arr, size);
+                    //ustawienie wartości ostatnio sczytanej tablicy
+                    curArr.setSize(size);
+                    curArr.setArr(arr);
+
                     break;
-                case 3:
+                case 3://wybór trzeci umożliwiający wyświetlenie ostatnio utworzonej tablicy
+                    if(size!=0){
+                        //wywołanie funkcji wyświetlającej obecną tablicę
+                        curArr.showArray();
+                    }else{
+                        std::cout<<"Nie utworzono jeszcze żadnej tablicy"<<std::endl;
+                    }
                     break;
-                case 4:
+                case 4://wybór czwarty umożliwiający wykonanie sortowania insertion sort na kopii ostatnio utworzonej tablicy
+                    cArr = generator.copyArray<float>( arr, size );
+                    insertionSort(cArr,size);
+                    //ustawienie wartości posortowanej tablicy
+                    sortedArr.setSize(size);
+                    sortedArr.setArr(cArr);
                     break;
-                case 5:
+                case 5://wybór piąty umożliwiający wykonanie sortowania heap sort na kopii ostatnio utworzonej tablicy
+                    cArr = generator.copyArray<float>( arr, size );
+                    heapSort(cArr,size);
+                    //ustawienie wartości posortowanej tablicy
+                    sortedArr.setSize(size);
+                    sortedArr.setArr(cArr);
+                    break;
+                case 6://wybór szósty umożliwiający wykonanie sortowania shell sort na kopii ostatnio utworzonej tablicy
+                    std::cout<<"Wybierz wersje sortowania shella: "<<std::endl;
+                    std::cout<<"1. Wersja pierwsza"<<std::endl;
+                    std::cout<<"2. Wersja druga"<<std::endl;
+                    std::cout<<"0. Powrot"<<std::endl;
+                    int version;
+                    std::cin>>version;
+                    if(version==0) break;
+                    cArr = generator.copyArray<float>( arr, size );
+                    if(version==1){
+                        shellSort1(cArr, size);
+                    }else if(version==2){
+                        shellSort2(cArr,size);
+                    }
+
+                    //ustawienie wartości posortowanej tablicy
+                    sortedArr.setSize(size);
+                    sortedArr.setArr(cArr);
+                    break;
+                case 7://wybór siódmy umożliwiający wykonanie sortowania quick sort na kopii ostatnio utworzonej tablicy
+                    std::cout<<"Wybierz pozycje pivota:"<<std::endl;
+                    std::cout<<"1. Lewy"<<std::endl;
+                    std::cout<<"2. Prawy"<<std::endl;
+                    std::cout<<"3. Srodkowy"<<std::endl;
+                    std::cout<<"4. Losowy"<<std::endl;
+                    std::cout<<"0. Powrot"<<std::endl;
+                    cArr = generator.copyArray<float>( arr, size );
+                    int pivot;
+                    std::cin >> pivot;
+                    switch(pivot){
+                        case 1://wywołanie funkcji quick sort dla lewego pivota
+                            quickSort(cArr,size,0);
+                            //ustawienie wartości posortowanej tablicy
+                            sortedArr.setSize(size);
+                            sortedArr.setArr(cArr);
+                            break;
+                        case 2://wywołanie funkcji quick sort dla prawego pivota
+                            quickSort(cArr,size,1);
+                            //ustawienie wartości posortowanej tablicy
+                            sortedArr.setSize(size);
+                            sortedArr.setArr(cArr);
+                            break;
+                        case 3://wywołanie funkcji quick sort dla środkowego pivota
+                            quickSort(cArr,size,2);
+                            //ustawienie wartości posortowanej tablicy
+                            sortedArr.setSize(size);
+                            sortedArr.setArr(cArr);
+                            break;
+                        case 4://wywołanie funkcji quick sort dla losowego pivota
+                            quickSort(cArr,size,3);
+                            //ustawienie wartości posortowanej tablicy
+                            sortedArr.setSize(size);
+                            sortedArr.setArr(cArr);
+                            break;
+                        case 0:
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 8://wybór ósmy umożliwia wyświetlenie posortowanej tablicy
+                    sortedArr.showArray();
                     break;
                 case 0:
                     return;
                 default:
                     break;
             }
+        }
+    }
+public:
+    void chooseMode(){
+        while(true){
+            std::cout<<"Wybierz tryb pracy:"<<std::endl;
+            std::cout<<"1. Automatyczna generacja danych"<<std::endl;
+            std::cout<<"2. Menu"<<std::endl;
+            std::cout<<"0. Wyjdz"<<std::endl;
+            dataGenerator g;
+            int choice;
+            std::cin>>choice;
+            switch (choice) {
+                case 1:
+                    g.generateDataToTests();
+                    break;
+                case 2:
+                    chooseType();
+                    break;
+                case 0:
+                    return;
+                default:
+                    break;
+            }
+
         }
     }
 
