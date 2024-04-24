@@ -61,13 +61,13 @@ private:
     void menu(){
         std::cout << "Menu:"<<std::endl;
         std::cout<<"1. Wczytanie tablicy z pliku"<<std::endl;
-        std::cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartości"<<std::endl;
-        std::cout<<"3. Wyświetlenie ostatnio utworzonej tablicy na ekranie"<<std::endl;
+        std::cout<<"2. Wygenerowanie tablicy o zadanym rozmiarze zawierające losowe wartosci"<<std::endl;
+        std::cout<<"3. Wyswietlenie ostatnio utworzonej tablicy na ekranie"<<std::endl;
         std::cout<<"4. insertion sort"<<std::endl;
         std::cout<<"5. heap sort"<<std::endl;
         std::cout<<"6. shell sort"<<std::endl;
         std::cout<<"7. quick sort"<<std::endl;
-        std::cout<<"8. Wyświetlenie posortowanej tablicy na ekranie "<<std::endl;
+        std::cout<<"8. Wyswietlenie posortowanej tablicy na ekranie "<<std::endl;
         std::cout<<"0. Powrot"<<std::endl;
     }
 
@@ -189,10 +189,6 @@ private:
                     break;
                 case 8://wybór ósmy umożliwia wyświetlenie posortowanej tablicy
                     sortedArr.showArray();
-                    /*if(sortedArr.getSize != 0){
-                    }else{
-                        std::cout<<"Nie posortowano jeszcze żadnej tablicy"<<std::endl;
-                    }*/
                     break;
                 case 0:
                     return;

@@ -10,25 +10,32 @@
 
 
 template<typename T>
-long long shellSort1(T tab[], int size){//dodać drugi algorytm o mniejszej zlożoności
+long long shellSort1(T arr[], int size){
     auto start = std::chrono::high_resolution_clock::now();
     int h =1;
     int d[2] = {1,1};
+    //obliczenie początkowej odległości metodą Knutha
     while(3*h+1<size){
         d[0]=d[1];
         d[1]=3*h+1;
         h++;
     }
-    h = d[0];
+    h = d[0];//początkowa odległość
+    //rozpocęcie sortowania z obliczoną odległością
     while(h>0){
+        //przechodzenie przez podtablice
         for (int i = h; i < size; i+=1) {
-            T tmp = tab[i];
+            //zapamiętanie elementu, który będzie porównywany
+            T tmp = arr[i];
+            // Przesunięcie elementów większych od zapamiętanego elementu
             int j;
-            for(j=i;j>=h && tab[j-h]>tmp;j-=h){
-                tab[j]= tab[j-h];
+            for(j=i;j>=h && arr[j - h] > tmp; j-=h){
+                arr[j]= arr[j - h];
             }
-            tab[j]=tmp;
+            // Umieszczenie zapamiętanego elementu w odpowiednim miejscu
+            arr[j]=tmp;
         }
+        //zmiejszenie odległości poprzez podzielenie na 3
         h /=3;
     }
     auto end = std::chrono::high_resolution_clock::now();

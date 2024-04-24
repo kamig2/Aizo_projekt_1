@@ -65,6 +65,7 @@ build CMakeFiles/Projekt_Aizo.dir/main.cpp.obj: CXX_COMPILER__Projekt_Aizo_Debug
 
 build Projekt_Aizo.exe: CXX_EXECUTABLE_LINKER__Projekt_Aizo_Debug CMakeFiles/Projekt_Aizo.dir/main.cpp.obj
   FLAGS = -g
+  LINK_FLAGS = -static-libgcc -static-libstdc++ -static
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Projekt_Aizo.dir
   POST_BUILD = cd .

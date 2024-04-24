@@ -13,7 +13,7 @@ private:
     T* array{};
 
 public:
-    currentArray(int size, T *arr) {//jak przekazać tablice żeby dało sie ją wyswietlić
+    currentArray(int size, T *arr) {
         this->size = size;
         this->array = arr;
     }
